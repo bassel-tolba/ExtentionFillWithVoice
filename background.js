@@ -1,27 +1,44 @@
 // WARNING: Do NOT hardcode your API key in a production extension.
 // For demonstration purposes only. Consider using chrome.storage or a backend proxy.
-const GEMINI_API_KEY = "AIzaSyCJMNmYIcImonZSmDQ - MdDlRoF_r0u2Tqs"; // <<< REPLACE WITH YOUR ACTUAL, VALID KEY
+const GEMINI_API_KEY = "AIzaSyCJMNmYIcImonZSmDQ - MdDlRoF_r0u2Tqs"; // <<< YOUR KEY IS PRESERVED
 
-// --- NEW: Listener for action icon click ---
-chrome.action.onClicked.addListener((tab) => {
+// --- NEW: Listener for action icon click to create a persistent panel ---
+function createOrFocusPanel() {
 	const popupUrl = chrome.runtime.getURL("popup.html");
-	const windowWidth = 450; // As per your CSS width + padding
-	const windowHeight = 750; // A bit taller to accommodate content + results
+	const windowWidth = 440; // A good starting width
+	const windowHeight = 750; // A good starting height
 
-	chrome.tabs.query({ url: popupUrl }, (tabs) => {
-		if (tabs.length > 0) {
-			chrome.windows.update(tabs[0].windowId, { focused: true });
+	// Check if the panel already exists
+	chrome.windows.getAll({ populate: true, windowTypes: ["panel"] }, (windows) => {
+		let existingPanel = null;
+		for (const window of windows) {
+			if (window.tabs && window.tabs.some((t) => t.url === popupUrl)) {
+				existingPanel = window;
+				break;
+			}
+		}
+
+		if (existingPanel && existingPanel.id) {
+			// If it exists, just focus it
+			chrome.windows.update(existingPanel.id, { focused: true });
 		} else {
+			// If not, create a new one
 			chrome.windows.create({
 				url: popupUrl,
-				type: "popup",
+				type: "panel", // This is the key change for "always on top" behavior
 				width: windowWidth,
 				height: windowHeight,
 				focused: true,
 			});
 		}
 	});
+}
+
+chrome.action.onClicked.addListener((tab) => {
+	createOrFocusPanel();
 });
+
+// --- UNTOUCHED LOGIC: The original message listener is preserved below ---
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	console.log("BACKGROUND: Received message. Action:", request.action);
@@ -197,11 +214,10 @@ ${commonOutputInstructions}
 		const apiContents = [{ parts: apiParts }];
 
 		console.log(
-			"BACKGROUND: Preparing to call Gemini API. Model: gemini-2.5-flash. Structure of 'contents.parts':", // REVERTED
+			"BACKGROUND: Preparing to call Gemini API. Model: gemini-2.5-flash. Structure of 'contents.parts':",
 			JSON.stringify(apiParts, (key, value) => (typeof value === "string" && value.length > 100 ? value.substring(0, 100) + "..." : value), 2)
 		);
 
-		// REVERTED to use gemini-2.5-flash directly as in the original provided file
 		fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -227,11 +243,6 @@ ${commonOutputInstructions}
 						},
 						required: ["formId", "fieldsToFill"],
 					},
-					// thinkingConfig part was removed in previous updates, if it was there in your original, add it back.
-					// For example:
-					// thinkingConfig: {
-					// 	thinkingBudget: 0,
-					// },
 				},
 			}),
 		})

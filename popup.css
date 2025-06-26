@@ -1,23 +1,123 @@
 /* --- Global Variables --- */
 :root {
-	--primary-color: #007bff;
-	--primary-color-hover: #0056b3;
-	--secondary-color: #6c757d;
-	--secondary-color-hover: #545b62;
-	--success-color: #28a745;
-	--error-color: #dc3545;
-	--warning-color: #ffc107;
-	--info-color: #17a2b8;
-	--light-color: #f8f9fa;
-	--dark-color: #343a40;
-	--text-color: #212529;
-	--border-color: #dee2e6;
-	--border-radius: 6px;
+	/* --- Light Mode: Cairo Golden --- */
+	--bg-primary-light: #fdf5e6; /* Old Lace / Very light warm beige */
+	--bg-secondary-light: #faf0e6; /* Linen / Light warm beige */
+	--text-primary-light: #3d2b1f; /* Bistre Brown - for main text */
+	--text-secondary-light: #704214; /* Sepia / Brownish for secondary text/labels */
+	--accent-primary-light: #daa520; /* Goldenrod - main accent */
+	--accent-secondary-light: #b8860b; /* DarkGoldenrod - hover/borders */
+	--accent-text-light: #ffffff; /* Text on accent buttons */
+	--border-color-light: #d2b48c; /* Tan - for borders */
+	--input-bg-light: #ffffff;
+	--input-border-light: #c8ad7f; /* Lighter Goldenrod for input borders */
+	--shadow-color-light: rgba(100, 70, 20, 0.12);
+	--success-bg-light: #e6f5e9;
+	--success-text-light: #287d3c;
+	--success-border-light: #a3d8b0;
+	--error-bg-light: #fbe9e7;
+	--error-text-light: #b71c1c;
+	--error-border-light: #f3c4bf;
+	--warning-bg-light: #fff8e1;
+	--warning-text-light: #8d6e63; /* Brownish for warning */
+	--warning-border-light: #ffe082;
+	--info-bg-light: #e1f5fe;
+	--info-text-light: #0d47a1;
+	--info-border-light: #b3e5fc;
+	--disabled-bg-light: #e0dcd1;
+	--disabled-text-light: #9e9e9e;
+
+	/* --- Dark Mode: Moonlit Night --- */
+	--bg-primary-dark: #1a1d2b; /* Very Dark Blue/Purple - main background */
+	--bg-secondary-dark: #2a2f40; /* Darker Slate Blue - secondary background */
+	--text-primary-dark: #e0e0e0; /* Light Gray - for main text */
+	--text-secondary-dark: #b0b0d0; /* Lavender Gray - for secondary text/labels */
+	--accent-primary-dark: #8a9bff; /* Periwinkle/Light Blue - main accent */
+	--accent-secondary-dark: #6a7bff; /* Slightly darker Periwinkle */
+	--accent-text-dark: #1a1d2b; /* Text on accent buttons (dark for contrast) */
+	--border-color-dark: #404860; /* Darker border */
+	--input-bg-dark: #2f3446; /* Dark input background */
+	--input-border-dark: #505870; /* Darker input border */
+	--shadow-color-dark: rgba(0, 0, 0, 0.25);
+	--success-bg-dark: #1e3b2f;
+	--success-text-dark: #60d394;
+	--success-border-dark: #3a5f4f;
+	--error-bg-dark: #4d1f1f;
+	--error-text-dark: #ff8a80;
+	--error-border-dark: #7b3e3e;
+	--warning-bg-dark: #4a3c23;
+	--warning-text-dark: #ffd166;
+	--warning-border-dark: #7d6b46;
+	--info-bg-dark: #1a3a53;
+	--info-text-dark: #72c3f9;
+	--info-border-dark: #3e6b89;
+	--disabled-bg-dark: #353a4d;
+	--disabled-text-dark: #757575;
+
+	/* --- Default to Light Mode Variables --- */
+	--bg-primary: var(--bg-primary-light);
+	--bg-secondary: var(--bg-secondary-light);
+	--text-primary: var(--text-primary-light);
+	--text-secondary: var(--text-secondary-light);
+	--accent-primary: var(--accent-primary-light);
+	--accent-secondary: var(--accent-secondary-light);
+	--accent-text: var(--accent-text-light);
+	--border-color: var(--border-color-light);
+	--input-bg: var(--input-bg-light);
+	--input-border: var(--input-border-light);
+	--shadow-color: var(--shadow-color-light);
+	--success-bg: var(--success-bg-light);
+	--success-text: var(--success-text-light);
+	--success-border: var(--success-border-light);
+	--error-bg: var(--error-bg-light);
+	--error-text: var(--error-text-light);
+	--error-border: var(--error-border-light);
+	--warning-bg: var(--warning-bg-light);
+	--warning-text: var(--warning-text-light);
+	--warning-border: var(--warning-border-light);
+	--info-bg: var(--info-bg-light);
+	--info-text: var(--info-text-light);
+	--info-border: var(--info-border-light);
+	--disabled-bg: var(--disabled-bg-light);
+	--disabled-text: var(--disabled-text-light);
+	--current-theme: "light";
+
+	/* --- Font & General --- */
 	--font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	--box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	--input-bg: #fff;
-	--input-border: #ced4da;
-	--disabled-bg: #e9ecef;
+	--border-radius: 6px;
+	--box-shadow: 0 3px 8px var(--shadow-color);
+	--box-shadow-light: 0 1px 3px var(--shadow-color);
+	--transition-speed: 0.2s;
+}
+
+/* --- Dark Mode Override --- */
+body.dark-mode {
+	--bg-primary: var(--bg-primary-dark);
+	--bg-secondary: var(--bg-secondary-dark);
+	--text-primary: var(--text-primary-dark);
+	--text-secondary: var(--text-secondary-dark);
+	--accent-primary: var(--accent-primary-dark);
+	--accent-secondary: var(--accent-secondary-dark);
+	--accent-text: var(--accent-text-dark);
+	--border-color: var(--border-color-dark);
+	--input-bg: var(--input-bg-dark);
+	--input-border: var(--input-border-dark);
+	--shadow-color: var(--shadow-color-dark);
+	--success-bg: var(--success-bg-dark);
+	--success-text: var(--success-text-dark);
+	--success-border: var(--success-border-dark);
+	--error-bg: var(--error-bg-dark);
+	--error-text: var(--error-text-dark);
+	--error-border: var(--error-border-dark);
+	--warning-bg: var(--warning-bg-dark);
+	--warning-text: var(--warning-text-dark);
+	--warning-border: var(--warning-border-dark);
+	--info-bg: var(--info-bg-dark);
+	--info-text: var(--info-text-dark);
+	--info-border: var(--info-border-dark);
+	--disabled-bg: var(--disabled-bg-dark);
+	--disabled-text: var(--disabled-text-dark);
+	--current-theme: "dark";
 }
 
 /* --- Base & Resets --- */
@@ -27,19 +127,30 @@
 	padding: 0;
 }
 
+html,
+body {
+	height: 100%;
+	overflow: hidden; /* Prevent double scrollbars */
+}
+
 body {
 	font-family: var(--font-family);
-	width: 420px; /* Adjusted width */
-	color: var(--text-color);
-	background-color: var(--light-color);
-	overscroll-behavior: none; /* Prevent pull-to-refresh on some systems */
+	min-width: 350px; /* Set a reasonable minimum width */
+	color: var(--text-primary);
+	background-color: var(--bg-primary);
+	overscroll-behavior: none;
+	transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+	display: flex;
+	flex-direction: column; /* Allow header to be fixed and container to scroll */
 }
 
 .container {
-	padding: 20px;
+	padding: 18px;
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 18px;
+	flex-grow: 1; /* Make the container take up remaining space */
+	overflow-y: auto; /* Enable scrolling ONLY on the container */
 }
 
 /* --- Header --- */
@@ -47,57 +158,95 @@ header {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	color: var(--primary-color);
+	color: var(--accent-primary);
 	border-bottom: 1px solid var(--border-color);
-	padding-bottom: 15px;
+	padding: 15px 18px; /* Match container padding */
+	flex-shrink: 0; /* Prevent header from shrinking */
 }
-
 .header-icon {
 	flex-shrink: 0;
+	color: var(--accent-primary);
 }
-
 header h1 {
-	font-size: 1.5em;
+	font-size: 1.4em;
 	font-weight: 600;
+	color: var(--text-primary);
+}
+.theme-toggle-button {
+	background: none;
+	border: 1px solid transparent;
+	color: var(--text-secondary);
+	cursor: pointer;
+	padding: 6px;
+	margin-left: auto;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+.theme-toggle-button:hover {
+	background-color: var(--bg-secondary);
+	color: var(--accent-primary);
+}
+.theme-toggle-button svg {
+	display: block;
 }
 
-/* --- Input Zone --- */
+/* --- Input Zone & General Layout --- */
+.input-zone,
+.action-zone,
+.results-zone,
+.fill-confirmation-section {
+	width: 100%;
+	max-width: 700px; /* Constrain width on very wide windows */
+	margin-left: auto;
+	margin-right: auto;
+}
 .input-zone {
+	background-color: var(--bg-secondary);
+	padding: 15px;
+	border-radius: var(--border-radius);
+	box-shadow: var(--box-shadow-light);
 	display: flex;
 	flex-direction: column;
-	gap: 18px;
+	gap: 15px;
 }
-
 .input-group {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
 }
-
 .input-group label,
 .input-group .file-upload-label {
-	/* Keep file-upload-label consistent */
 	font-weight: 500;
-	font-size: 0.95em;
-	color: var(--dark-color);
+	font-size: 0.9em;
+	color: var(--text-secondary);
 }
-
-textarea#userRequest {
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="file"] {
 	width: 100%;
-	min-height: 80px;
 	padding: 10px;
 	border: 1px solid var(--input-border);
+	background-color: var(--input-bg);
+	color: var(--text-primary);
 	border-radius: var(--border-radius);
 	font-family: var(--font-family);
 	font-size: 0.95em;
-	resize: vertical;
-	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
 }
-
-textarea#userRequest:focus {
+textarea#userRequest {
+	min-height: 80px;
+	resize: vertical;
+}
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
 	outline: none;
-	border-color: var(--primary-color);
-	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+	border-color: var(--accent-primary);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-primary) 30%, transparent);
 }
 
 /* --- Buttons --- */
@@ -107,63 +256,82 @@ button {
 	justify-content: center;
 	gap: 8px;
 	padding: 10px 15px;
-	border: none;
+	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	cursor: pointer;
 	font-size: 1em;
 	font-weight: 500;
-	transition: background-color 0.2s ease, transform 0.1s ease;
+	transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease,
+		transform 0.1s ease;
 	white-space: nowrap;
 }
-
 button:disabled {
-	opacity: 0.7;
+	background-color: var(--disabled-bg) !important;
+	color: var(--disabled-text) !important;
+	border-color: var(--disabled-bg) !important;
 	cursor: not-allowed;
+	opacity: 0.8;
 }
-
 button:active:not(:disabled) {
 	transform: translateY(1px);
 }
-
 .primary-action {
-	background-color: var(--primary-color);
-	color: white;
+	background-color: var(--accent-primary);
+	color: var(--accent-text);
+	border-color: var(--accent-primary);
 	width: 100%;
-	position: relative; /* For spinner positioning */
+	position: relative;
 }
-
 .primary-action:hover:not(:disabled) {
-	background-color: var(--primary-color-hover);
+	background-color: var(--accent-secondary);
+	border-color: var(--accent-secondary);
 }
-
+.primary-action.confirm {
+	background-color: var(--success-bg);
+	color: var(--success-text);
+	border-color: var(--success-border);
+}
+.primary-action.confirm:hover:not(:disabled) {
+	background-color: color-mix(in srgb, var(--success-bg) 90%, black);
+}
 .secondary-action {
-	background-color: var(--secondary-color);
-	color: white;
+	background-color: var(--bg-primary);
+	color: var(--text-secondary);
+	border: 1px solid var(--border-color);
 }
-
 .secondary-action:hover:not(:disabled) {
-	background-color: var(--secondary-color-hover);
+	background-color: var(--bg-secondary);
+	border-color: var(--accent-secondary);
+	color: var(--accent-primary);
 }
-
-.clear-button {
-	background-color: var(--warning-color);
-	color: var(--dark-color);
-	font-size: 0.9em;
+.secondary-action.cancel {
+	border-color: var(--warning-border);
+	color: var(--warning-text);
+}
+.secondary-action.cancel:hover:not(:disabled) {
+	background-color: var(--warning-bg);
+}
+.clear-button,
+.small-button {
+	font-size: 0.85em;
 	padding: 6px 10px;
 }
-.clear-button:hover:not(:disabled) {
-	background-color: #e0a800;
+.clear-button {
+	background-color: var(--warning-bg);
+	color: var(--warning-text);
+	border-color: var(--warning-border);
 }
-
+.clear-button:hover:not(:disabled) {
+	background-color: color-mix(in srgb, var(--warning-bg) 90%, black);
+}
 button .icon {
 	width: 18px;
 	height: 18px;
 	flex-shrink: 0;
+	color: currentColor;
 }
-
-/* File Upload Label as Button */
 .file-upload-label {
-	display: inline-flex; /* Use inline-flex for button-like behavior */
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	gap: 8px;
@@ -172,161 +340,208 @@ button .icon {
 	cursor: pointer;
 	font-size: 1em;
 	font-weight: 500;
-	transition: background-color 0.2s ease;
-	background-color: var(--secondary-color);
-	color: white;
+	background-color: var(--bg-primary);
+	color: var(--text-secondary);
+	border: 1px solid var(--border-color);
 	text-align: center;
+	transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
-
 .file-upload-label:hover {
-	background-color: var(--secondary-color-hover);
+	background-color: var(--bg-secondary);
+	border-color: var(--accent-secondary);
+	color: var(--accent-primary);
 }
-
 .file-upload-label input[type="file"] {
-	display: none; /* Hide the actual file input */
+	display: none;
 }
 
 /* --- Status Messages --- */
 .status-message {
 	font-size: 0.85em;
-	padding: 6px 10px;
+	padding: 8px 12px;
 	border-radius: var(--border-radius);
-	margin-top: 2px;
-	min-height: 1.5em; /* Ensure space even when empty */
+	margin-top: 4px;
+	min-height: 1.5em;
 	opacity: 0;
 	transform: translateY(-5px);
-	transition: opacity 0.3s ease, transform 0.3s ease;
+	transition: opacity 0.3s ease, transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease,
+		border-color var(--transition-speed) ease;
+	border: 1px solid transparent;
 }
-
 .status-message.visible {
 	opacity: 1;
 	transform: translateY(0);
 }
-
 .status-message.info {
-	background-color: #e2f3fe;
-	color: #0c5460;
-	border: 1px solid #b8daff;
+	background-color: var(--info-bg);
+	color: var(--info-text);
+	border-color: var(--info-border);
 }
 .status-message.error {
-	background-color: #f8d7da;
-	color: #721c24;
-	border: 1px solid #f5c6cb;
+	background-color: var(--error-bg);
+	color: var(--error-text);
+	border-color: var(--error-border);
 }
 .status-message.success {
-	background-color: #d4edda;
-	color: #155724;
-	border: 1px solid #c3e6cb;
+	background-color: var(--success-bg);
+	color: var(--success-text);
+	border-color: var(--success-border);
 }
+.status-message.warning,
 .status-message.recording {
-	background-color: #fff3cd;
-	color: #856404;
-	border: 1px solid #ffeeba;
+	background-color: var(--warning-bg);
+	color: var(--warning-text);
+	border-color: var(--warning-border);
 }
 .status-message.recording .pulsing-dot {
 	display: inline-block;
 	width: 8px;
 	height: 8px;
-	background-color: var(--error-color);
+	background-color: var(--error-text);
 	border-radius: 50%;
 	animation: pulse 1.5s infinite ease-in-out;
-	margin-right: 5px;
+	margin-right: 6px;
 }
-
 @keyframes pulse {
 	0%,
 	100% {
 		opacity: 1;
 	}
 	50% {
-		opacity: 0.3;
+		opacity: 0.4;
 	}
 }
-
-/* Audio Player & Image Preview */
 .audio-player-container {
-	margin-top: 5px;
+	margin-top: 8px;
 	min-height: 40px;
 }
 .audio-player-container audio {
 	width: 100%;
 	border-radius: var(--border-radius);
 }
+body.dark-mode .audio-player-container audio {
+	filter: hue-rotate(180deg) contrast(80%) saturate(150%);
+}
 
+/* --- Image Preview --- */
 .image-preview-container {
-	margin-top: 5px;
-	border: 2px dashed var(--border-color);
+	margin-top: 8px;
+	border: 2px dashed var(--input-border);
 	border-radius: var(--border-radius);
-	min-height: 60px;
+	min-height: 100px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding: 10px;
-	background-color: #fff;
-	transition: border-color 0.3s ease;
+	background-color: var(--input-bg);
+	transition: border-color var(--transition-speed) ease;
+	position: relative;
 }
 .image-preview-container.has-image {
-	border-color: var(--primary-color);
+	border-color: var(--accent-primary);
+	border-style: solid;
+}
+.image-preview-container .image-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-secondary);
+	font-size: 0.9em;
+	text-align: center;
+}
+.image-preview-container .image-placeholder svg {
+	margin-bottom: 5px;
+	width: 28px;
+	height: 28px;
+	opacity: 0.7;
+}
+.image-preview-container.has-image .image-placeholder {
+	display: none;
 }
 .image-preview-container img {
 	max-width: 100%;
-	max-height: 140px;
+	max-height: 200px;
 	object-fit: contain;
-	border-radius: calc(var(--border-radius) - 2px);
+	border-radius: calc(var(--border-radius) - 4px);
 }
 
-/* --- Action Zone --- */
+/* --- Action Zone & Spinner --- */
 .action-zone {
-	margin-top: 5px; /* Reduced top margin */
+	margin-top: 5px;
 }
-
-/* Button Spinner (for primary action) */
 .primary-action .spinner {
 	width: 20px;
 	height: 20px;
-	border: 3px solid rgba(255, 255, 255, 0.3);
+	border: 3px solid color-mix(in srgb, var(--accent-text) 30%, transparent);
 	border-radius: 50%;
-	border-top-color: #fff;
+	border-top-color: var(--accent-text);
 	animation: spin 0.8s linear infinite;
-	position: absolute; /* If button text is hidden */
-	/* If button text is visible, use flex properties on button */
-	right: 15px; /* Example positioning */
+	position: absolute;
+	right: 15px;
 }
 .primary-action.is-loading .button-text {
-	/* visibility: hidden; */ /* Option 1: Hide text */
-	margin-right: 25px; /* Option 2: Make space if spinner is inline */
+	margin-right: 25px;
 }
 .primary-action.is-loading .spinner {
-	display: inline-block !important; /* Override inline style from JS */
+	display: inline-block !important;
 }
-
 @keyframes spin {
 	to {
 		transform: rotate(360deg);
 	}
 }
 
-/* --- Results Zone --- */
-.results-zone {
-	position: relative; /* For overlay */
-	border-top: 1px solid var(--border-color);
-	padding-top: 15px;
-	min-height: 100px; /* To make loader visible */
+/* --- Fill Confirmation Section --- */
+.fill-confirmation-section {
+	border: 1px solid var(--warning-border);
+	background-color: var(--warning-bg);
+	padding: 15px;
+	border-radius: var(--border-radius);
+	margin-top: 15px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.fill-confirmation-section h4 {
+	margin: 0;
+	font-size: 1.1em;
+	color: var(--warning-text);
+	font-weight: 600;
+}
+.fill-confirmation-section p {
+	margin: 0;
+	font-size: 0.9em;
+	color: var(--warning-text);
+}
+.confirmation-buttons {
+	display: flex;
+	gap: 10px;
+	margin-top: 5px;
+}
+.confirmation-buttons button {
+	flex-grow: 1;
 }
 
+/* --- Results Zone --- */
+.results-zone {
+	position: relative;
+	padding-top: 15px;
+	min-height: 100px;
+}
 .results-loader-overlay {
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(248, 249, 250, 0.85); /* Semi-transparent light */
+	background-color: color-mix(in srgb, var(--bg-primary) 85%, transparent);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	z-index: 10;
-	border-radius: var(--border-radius); /* If results zone has one */
+	border-radius: var(--border-radius);
 	opacity: 0;
 	visibility: hidden;
 	transition: opacity 0.3s ease, visibility 0s 0.3s ease;
@@ -336,99 +551,97 @@ button .icon {
 	visibility: visible;
 	transition-delay: 0s;
 }
-
 .results-spinner {
 	width: 40px;
 	height: 40px;
-	border: 4px solid rgba(0, 0, 0, 0.1);
+	border: 4px solid color-mix(in srgb, var(--text-primary) 10%, transparent);
 	border-radius: 50%;
-	border-top-color: var(--primary-color);
+	border-top-color: var(--accent-primary);
 	animation: spin 1s linear infinite;
 	margin-bottom: 10px;
 }
-
 .results-loader-overlay p {
 	font-size: 0.95em;
-	color: var(--dark-color);
+	color: var(--text-primary);
 	font-weight: 500;
 }
-
 .results-content {
 	opacity: 1;
 	transition: opacity 0.3s ease;
 }
 .results-content.loading {
-	opacity: 0.3; /* Dim content when loader is active */
+	opacity: 0.3;
 }
-
-.results-zone h2 {
-	font-size: 1.1em;
-	color: var(--dark-color);
-	margin-top: 10px;
-	margin-bottom: 8px;
+.results-zone h3 {
+	font-size: 1.05em;
+	color: var(--text-secondary);
+	margin: 0;
 	font-weight: 600;
 }
-.results-zone h2:first-child {
-	margin-top: 0;
-}
-
 #geminiOutput {
-	background-color: #e9ecef;
+	background-color: var(--input-bg);
 	padding: 12px;
 	border-radius: var(--border-radius);
 	white-space: pre-wrap;
 	word-break: break-all;
 	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-	font-size: 0.85em;
-	color: var(--dark-color);
-	border: 1px solid #ced4da;
-	max-height: 200px; /* Limit height and make scrollable */
+	font-size: 0.8em;
+	color: var(--text-primary);
+	border: 1px solid var(--input-border);
+	max-height: 200px;
 	overflow-y: auto;
 }
 #geminiOutput.error-message {
-	/* If used for error directly */
-	background-color: #f8d7da;
-	color: #721c24;
-	border-color: #f5c6cb;
+	background-color: var(--error-bg);
+	color: var(--error-text);
+	border-color: var(--error-border);
 }
 #geminiOutput.info-message {
-	background-color: #e2f3fe;
-	color: #0c5460;
-	border-color: #b8daff;
+	background-color: var(--info-bg);
+	color: var(--info-text);
+	border-color: var(--info-border);
+	font-family: var(--font-family);
+	white-space: normal;
 }
-
-#formsFound .no-forms,
-#formsFound .error-message {
-	/* Shared error/empty styling for formsFound */
-	background-color: #f8d7da;
-	color: #721c24;
-	border: 1px solid #f5c6cb;
-	padding: 10px;
+#fillOperationStatusContainer {
+	display: none; /* Hide container until it has content */
+}
+#fillOperationStatusContainer p {
+	font-size: 0.9em;
+	padding: 8px 10px;
 	border-radius: var(--border-radius);
-	font-style: italic;
+	margin-bottom: 12px;
+	text-align: center;
 }
-#formsFound .info-message {
-	background-color: #e2f3fe;
-	color: #0c5460;
-	border: 1px solid #b8daff;
-	padding: 10px;
-	border-radius: var(--border-radius);
+#fillOperationStatusContainer p.success {
+	background-color: var(--success-bg);
+	color: var(--success-text);
 }
-
+#fillOperationStatusContainer p.error {
+	background-color: var(--error-bg);
+	color: var(--error-text);
+}
+#fillOperationStatusContainer p.warning {
+	background-color: var(--warning-bg);
+	color: var(--warning-text);
+}
+#fillOperationStatusContainer p.info {
+	background-color: var(--info-bg);
+	color: var(--info-text);
+}
 .form-section {
 	border: 1px solid var(--border-color);
 	padding: 12px;
 	margin-bottom: 12px;
 	border-radius: var(--border-radius);
-	background-color: #fff;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+	background-color: var(--bg-primary);
+	box-shadow: var(--box-shadow-light);
 }
 .form-section h2 {
-	/* Targeting h2 within form-section */
 	font-size: 1em;
 	margin-top: 0;
 	margin-bottom: 8px;
-	color: var(--primary-color);
+	color: var(--accent-primary);
 	font-weight: 600;
 }
 .form-section ul {
@@ -440,24 +653,39 @@ button .icon {
 	padding: 6px 0;
 	font-size: 0.8em;
 	word-wrap: break-word;
-	color: #495057;
-	border-bottom: 1px dotted #eee;
+	color: var(--text-secondary);
+	border-bottom: 1px dotted color-mix(in srgb, var(--border-color) 50%, transparent);
 }
 .form-section ul li:last-child {
 	border-bottom: none;
 }
-
-/* Animations for record button state */
+.form-section.user-selected-form-details {
+	border-left: 3px solid var(--success-border);
+	background-color: var(--success-bg);
+}
+.form-section.user-selected-form-details h2 {
+	color: var(--success-text);
+}
+#formsFound .no-forms,
+#formsFound .error-message {
+	background-color: var(--error-bg);
+	color: var(--error-text);
+	border: 1px solid var(--error-border);
+	padding: 10px;
+	border-radius: var(--border-radius);
+	font-style: italic;
+}
 #recordButton.is-recording {
-	background-color: var(--error-color);
+	background-color: var(--error-bg);
+	color: var(--error-text);
+	border-color: var(--error-border);
 }
 #recordButton.is-recording:hover:not(:disabled) {
-	background-color: #c82333;
+	background-color: color-mix(in srgb, var(--error-bg) 90%, black);
 }
 #recordButton.is-recording .icon {
 	animation: pulse-icon 1.2s infinite ease-in-out;
 }
-
 @keyframes pulse-icon {
 	0% {
 		transform: scale(1);
@@ -469,23 +697,19 @@ button .icon {
 		transform: scale(1);
 	}
 }
-
-/* --- NEW: Form Selection Styles --- */
 .form-selection-control {
 	display: flex;
 	align-items: center;
 	gap: 10px;
+	flex-wrap: wrap;
 }
-
 #selectFormButton {
-	flex-shrink: 0; /* Prevent button from shrinking */
+	flex-shrink: 0;
 }
-
 .status-like-display {
-	/* General styling for the selected form display */
 	font-size: 0.9em;
-	color: var(--secondary-color);
-	padding: 8px 10px; /* Match button padding closer */
+	color: var(--text-secondary);
+	padding: 8px 10px;
 	background-color: var(--input-bg);
 	border: 1px solid var(--input-border);
 	border-radius: var(--border-radius);
@@ -494,31 +718,100 @@ button .icon {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	min-width: 150px;
 }
 .status-like-display.selected {
-	color: var(--success-color);
-	border-color: var(--success-color);
+	color: var(--success-text);
+	border-color: var(--success-border);
+	background-color: var(--success-bg);
 	font-weight: 500;
 }
 .status-like-display.selecting {
-	color: var(--warning-color);
-	border-color: var(--warning-color);
+	color: var(--warning-text);
+	border-color: var(--warning-border);
+	background-color: var(--warning-bg);
 	font-style: italic;
 }
-
-/* Style for when selection is active, applied to body */
 body.selecting-form #selectFormButton {
-	background-color: var(--warning-color);
-	color: var(--dark-color);
+	background-color: var(--warning-bg);
+	color: var(--warning-text);
+	border-color: var(--warning-border);
 }
 body.selecting-form #selectFormButton:hover:not(:disabled) {
-	background-color: #e0a800; /* Darker warning */
+	background-color: color-mix(in srgb, var(--warning-bg) 90%, black);
 }
 
-/* Optional: Add specific text change for button span when selecting-form active */
-/* This is now handled in JS for more control
-body.selecting-form #selectFormButton span::after {
-    content: " (Cancel)";
-    font-style: italic;
-    font-size: 0.9em;
-} */
+/* --- Collapsible Sections --- */
+.collapsible-section {
+	margin-top: 15px;
+	background-color: var(--bg-secondary);
+	border-radius: var(--border-radius);
+	box-shadow: var(--box-shadow-light);
+}
+.collapsible-header {
+	background-color: transparent;
+	padding: 10px 15px;
+	width: 100%;
+	text-align: left;
+	border: none;
+	border-bottom: 1px solid var(--border-color);
+	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: var(--text-secondary);
+	border-top-left-radius: var(--border-radius);
+	border-top-right-radius: var(--border-radius);
+}
+.collapsible-header:hover {
+	background-color: color-mix(in srgb, var(--bg-secondary) 85%, var(--border-color));
+}
+.collapsible-header h3 {
+	color: var(--text-primary);
+	font-size: 1em;
+}
+.collapsible-header .toggle-icon {
+	font-size: 1.4em;
+	font-weight: bold;
+	color: var(--text-secondary);
+	transition: transform var(--transition-speed) ease;
+}
+.collapsible-header .toggle-icon.open {
+	transform: rotate(45deg);
+}
+.collapsible-content {
+	padding: 0px 15px 15px 15px;
+}
+#formsFound.collapsible-content,
+#geminiOutputContainer.collapsible-content {
+	max-height: 250px;
+	overflow-y: auto;
+}
+#geminiOutputContainer.collapsible-content {
+	padding: 15px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 400px) {
+	.container {
+		padding: 12px;
+		gap: 15px;
+	}
+	header {
+		padding: 12px;
+	}
+	header h1 {
+		font-size: 1.2em;
+	}
+	.form-selection-control,
+	.confirmation-buttons {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	.status-like-display {
+		text-align: center;
+	}
+	button {
+		font-size: 0.95em;
+	}
+}
