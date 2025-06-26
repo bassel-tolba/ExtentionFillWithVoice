@@ -1,0 +1,524 @@
+/* --- Global Variables --- */
+:root {
+	--primary-color: #007bff;
+	--primary-color-hover: #0056b3;
+	--secondary-color: #6c757d;
+	--secondary-color-hover: #545b62;
+	--success-color: #28a745;
+	--error-color: #dc3545;
+	--warning-color: #ffc107;
+	--info-color: #17a2b8;
+	--light-color: #f8f9fa;
+	--dark-color: #343a40;
+	--text-color: #212529;
+	--border-color: #dee2e6;
+	--border-radius: 6px;
+	--font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	--input-bg: #fff;
+	--input-border: #ced4da;
+	--disabled-bg: #e9ecef;
+}
+
+/* --- Base & Resets --- */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: var(--font-family);
+	width: 420px; /* Adjusted width */
+	color: var(--text-color);
+	background-color: var(--light-color);
+	overscroll-behavior: none; /* Prevent pull-to-refresh on some systems */
+}
+
+.container {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+/* --- Header --- */
+header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: var(--primary-color);
+	border-bottom: 1px solid var(--border-color);
+	padding-bottom: 15px;
+}
+
+.header-icon {
+	flex-shrink: 0;
+}
+
+header h1 {
+	font-size: 1.5em;
+	font-weight: 600;
+}
+
+/* --- Input Zone --- */
+.input-zone {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.input-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.input-group label,
+.input-group .file-upload-label {
+	/* Keep file-upload-label consistent */
+	font-weight: 500;
+	font-size: 0.95em;
+	color: var(--dark-color);
+}
+
+textarea#userRequest {
+	width: 100%;
+	min-height: 80px;
+	padding: 10px;
+	border: 1px solid var(--input-border);
+	border-radius: var(--border-radius);
+	font-family: var(--font-family);
+	font-size: 0.95em;
+	resize: vertical;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+textarea#userRequest:focus {
+	outline: none;
+	border-color: var(--primary-color);
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* --- Buttons --- */
+button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 10px 15px;
+	border: none;
+	border-radius: var(--border-radius);
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 500;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+	white-space: nowrap;
+}
+
+button:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+}
+
+button:active:not(:disabled) {
+	transform: translateY(1px);
+}
+
+.primary-action {
+	background-color: var(--primary-color);
+	color: white;
+	width: 100%;
+	position: relative; /* For spinner positioning */
+}
+
+.primary-action:hover:not(:disabled) {
+	background-color: var(--primary-color-hover);
+}
+
+.secondary-action {
+	background-color: var(--secondary-color);
+	color: white;
+}
+
+.secondary-action:hover:not(:disabled) {
+	background-color: var(--secondary-color-hover);
+}
+
+.clear-button {
+	background-color: var(--warning-color);
+	color: var(--dark-color);
+	font-size: 0.9em;
+	padding: 6px 10px;
+}
+.clear-button:hover:not(:disabled) {
+	background-color: #e0a800;
+}
+
+button .icon {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+
+/* File Upload Label as Button */
+.file-upload-label {
+	display: inline-flex; /* Use inline-flex for button-like behavior */
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 10px 15px;
+	border-radius: var(--border-radius);
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 500;
+	transition: background-color 0.2s ease;
+	background-color: var(--secondary-color);
+	color: white;
+	text-align: center;
+}
+
+.file-upload-label:hover {
+	background-color: var(--secondary-color-hover);
+}
+
+.file-upload-label input[type="file"] {
+	display: none; /* Hide the actual file input */
+}
+
+/* --- Status Messages --- */
+.status-message {
+	font-size: 0.85em;
+	padding: 6px 10px;
+	border-radius: var(--border-radius);
+	margin-top: 2px;
+	min-height: 1.5em; /* Ensure space even when empty */
+	opacity: 0;
+	transform: translateY(-5px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.status-message.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.status-message.info {
+	background-color: #e2f3fe;
+	color: #0c5460;
+	border: 1px solid #b8daff;
+}
+.status-message.error {
+	background-color: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb;
+}
+.status-message.success {
+	background-color: #d4edda;
+	color: #155724;
+	border: 1px solid #c3e6cb;
+}
+.status-message.recording {
+	background-color: #fff3cd;
+	color: #856404;
+	border: 1px solid #ffeeba;
+}
+.status-message.recording .pulsing-dot {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	background-color: var(--error-color);
+	border-radius: 50%;
+	animation: pulse 1.5s infinite ease-in-out;
+	margin-right: 5px;
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.3;
+	}
+}
+
+/* Audio Player & Image Preview */
+.audio-player-container {
+	margin-top: 5px;
+	min-height: 40px;
+}
+.audio-player-container audio {
+	width: 100%;
+	border-radius: var(--border-radius);
+}
+
+.image-preview-container {
+	margin-top: 5px;
+	border: 2px dashed var(--border-color);
+	border-radius: var(--border-radius);
+	min-height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+	background-color: #fff;
+	transition: border-color 0.3s ease;
+}
+.image-preview-container.has-image {
+	border-color: var(--primary-color);
+}
+.image-preview-container img {
+	max-width: 100%;
+	max-height: 140px;
+	object-fit: contain;
+	border-radius: calc(var(--border-radius) - 2px);
+}
+
+/* --- Action Zone --- */
+.action-zone {
+	margin-top: 5px; /* Reduced top margin */
+}
+
+/* Button Spinner (for primary action) */
+.primary-action .spinner {
+	width: 20px;
+	height: 20px;
+	border: 3px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	border-top-color: #fff;
+	animation: spin 0.8s linear infinite;
+	position: absolute; /* If button text is hidden */
+	/* If button text is visible, use flex properties on button */
+	right: 15px; /* Example positioning */
+}
+.primary-action.is-loading .button-text {
+	/* visibility: hidden; */ /* Option 1: Hide text */
+	margin-right: 25px; /* Option 2: Make space if spinner is inline */
+}
+.primary-action.is-loading .spinner {
+	display: inline-block !important; /* Override inline style from JS */
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* --- Results Zone --- */
+.results-zone {
+	position: relative; /* For overlay */
+	border-top: 1px solid var(--border-color);
+	padding-top: 15px;
+	min-height: 100px; /* To make loader visible */
+}
+
+.results-loader-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(248, 249, 250, 0.85); /* Semi-transparent light */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	z-index: 10;
+	border-radius: var(--border-radius); /* If results zone has one */
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0s 0.3s ease;
+}
+.results-loader-overlay.visible {
+	opacity: 1;
+	visibility: visible;
+	transition-delay: 0s;
+}
+
+.results-spinner {
+	width: 40px;
+	height: 40px;
+	border: 4px solid rgba(0, 0, 0, 0.1);
+	border-radius: 50%;
+	border-top-color: var(--primary-color);
+	animation: spin 1s linear infinite;
+	margin-bottom: 10px;
+}
+
+.results-loader-overlay p {
+	font-size: 0.95em;
+	color: var(--dark-color);
+	font-weight: 500;
+}
+
+.results-content {
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+.results-content.loading {
+	opacity: 0.3; /* Dim content when loader is active */
+}
+
+.results-zone h2 {
+	font-size: 1.1em;
+	color: var(--dark-color);
+	margin-top: 10px;
+	margin-bottom: 8px;
+	font-weight: 600;
+}
+.results-zone h2:first-child {
+	margin-top: 0;
+}
+
+#geminiOutput {
+	background-color: #e9ecef;
+	padding: 12px;
+	border-radius: var(--border-radius);
+	white-space: pre-wrap;
+	word-break: break-all;
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	font-size: 0.85em;
+	color: var(--dark-color);
+	border: 1px solid #ced4da;
+	max-height: 200px; /* Limit height and make scrollable */
+	overflow-y: auto;
+}
+#geminiOutput.error-message {
+	/* If used for error directly */
+	background-color: #f8d7da;
+	color: #721c24;
+	border-color: #f5c6cb;
+}
+#geminiOutput.info-message {
+	background-color: #e2f3fe;
+	color: #0c5460;
+	border-color: #b8daff;
+}
+
+#formsFound .no-forms,
+#formsFound .error-message {
+	/* Shared error/empty styling for formsFound */
+	background-color: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb;
+	padding: 10px;
+	border-radius: var(--border-radius);
+	font-style: italic;
+}
+#formsFound .info-message {
+	background-color: #e2f3fe;
+	color: #0c5460;
+	border: 1px solid #b8daff;
+	padding: 10px;
+	border-radius: var(--border-radius);
+}
+
+.form-section {
+	border: 1px solid var(--border-color);
+	padding: 12px;
+	margin-bottom: 12px;
+	border-radius: var(--border-radius);
+	background-color: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.form-section h2 {
+	/* Targeting h2 within form-section */
+	font-size: 1em;
+	margin-top: 0;
+	margin-bottom: 8px;
+	color: var(--primary-color);
+	font-weight: 600;
+}
+.form-section ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+.form-section ul li {
+	padding: 6px 0;
+	font-size: 0.8em;
+	word-wrap: break-word;
+	color: #495057;
+	border-bottom: 1px dotted #eee;
+}
+.form-section ul li:last-child {
+	border-bottom: none;
+}
+
+/* Animations for record button state */
+#recordButton.is-recording {
+	background-color: var(--error-color);
+}
+#recordButton.is-recording:hover:not(:disabled) {
+	background-color: #c82333;
+}
+#recordButton.is-recording .icon {
+	animation: pulse-icon 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-icon {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+/* --- NEW: Form Selection Styles --- */
+.form-selection-control {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+#selectFormButton {
+	flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.status-like-display {
+	/* General styling for the selected form display */
+	font-size: 0.9em;
+	color: var(--secondary-color);
+	padding: 8px 10px; /* Match button padding closer */
+	background-color: var(--input-bg);
+	border: 1px solid var(--input-border);
+	border-radius: var(--border-radius);
+	flex-grow: 1;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.status-like-display.selected {
+	color: var(--success-color);
+	border-color: var(--success-color);
+	font-weight: 500;
+}
+.status-like-display.selecting {
+	color: var(--warning-color);
+	border-color: var(--warning-color);
+	font-style: italic;
+}
+
+/* Style for when selection is active, applied to body */
+body.selecting-form #selectFormButton {
+	background-color: var(--warning-color);
+	color: var(--dark-color);
+}
+body.selecting-form #selectFormButton:hover:not(:disabled) {
+	background-color: #e0a800; /* Darker warning */
+}
+
+/* Optional: Add specific text change for button span when selecting-form active */
+/* This is now handled in JS for more control
+body.selecting-form #selectFormButton span::after {
+    content: " (Cancel)";
+    font-style: italic;
+    font-size: 0.9em;
+} */

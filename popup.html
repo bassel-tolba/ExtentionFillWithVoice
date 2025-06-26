@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>AI Form Filler</title>
+		<link rel="stylesheet" href="popup.css" />
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<svg class="header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28px" height="28px">
+					<path
+						d="M19.5 7.03125C19.5 7.83296 19.3445 8.61376 19.0526 9.32587L17.4853 13.064C17.3486 13.4009 17.0251 13.6339 16.6508 13.6339H15.3492C14.9749 13.6339 14.6514 13.4009 14.5147 13.064L12.9474 9.32587C12.6555 8.61376 12.5 7.83296 12.5 7.03125V4.5H19.5V7.03125ZM11 4.5V7.03125C11 8.52937 11.4117 9.94073 12.1481 11.1217L13.1426 12.8661C13.5973 13.6703 14.4397 14.1339 15.3492 14.1339H16.6508C17.5603 14.1339 18.4027 13.6703 18.8574 12.8661L19.8519 11.1217C20.5883 9.94073 21 8.52937 21 7.03125V4.5H18.5V2.5H13.5V4.5H11ZM9.5 21C10.0523 21 10.5 20.5523 10.5 20V18H11.5C12.0523 18 12.5 17.5523 12.5 17C12.5 16.4477 12.0523 16 11.5 16H6.5C5.94772 16 5.5 16.4477 5.5 17C5.5 17.5523 5.94772 18 6.5 18H7.5V20C7.5 20.5523 7.94772 21 8.5 21H9.5ZM8.5 4H7.5V3C7.5 2.44772 7.05228 2 6.5 2C5.94772 2 5.5 2.44772 5.5 3V4H4.5C3.94772 4 3.5 4.44772 3.5 5C3.5 5.55228 3.94772 6 4.5 6H5.5V7C5.5 7.55228 5.94772 8 6.5 8C7.05228 8 7.5 7.55228 7.5 7V6H8.5C9.05228 6 9.5 5.55228 9.5 5C9.5 4.44772 9.05228 4 8.5 4Z" />
+				</svg>
+				<h1>AI Form Filler</h1>
+			</header>
+
+			<section class="input-zone">
+				<!-- NEW: Form Selection Group -->
+				<div class="input-group">
+					<label>Target Form:</label>
+					<div class="form-selection-control">
+						<button id="selectFormButton" class="secondary-action">
+							<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px">
+								<path
+									d="M13.276 3.00002L6.04695 19.828L9.20095 16.035L12.355 19.828L14.072 18.364L10.917 14.572L13.818 13.578L17.502 10.963L13.276 3.00002Z" />
+							</svg>
+							<span>Select Form on Page</span>
+						</button>
+						<span id="selectedFormDisplay" class="status-like-display">No form selected.</span>
+					</div>
+				</div>
+				<!-- END NEW -->
+
+				<div class="input-group">
+					<label for="userRequest">Your Request (Optional if form selected & using image/audio):</label>
+					<textarea id="userRequest" placeholder="e.g., 'Fill login with user test pass 123' OR use voice, OR describe image."></textarea>
+				</div>
+
+				<div class="input-group">
+					<button id="recordButton" class="secondary-action">
+						<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px">
+							<path
+								d="M12 14C13.1046 14 14 13.1046 14 12V6C14 4.89543 13.1046 4 12 4C10.8954 4 10 4.89543 10 6V12C10 13.1046 10.8954 14 12 14ZM10 18.5C10 20.1569 11.3431 21.5 13 21.5C14.6569 21.5 16 20.1569 16 18.5V17.5H10V18.5ZM7 12C7 14.7614 9.23858 17 12 17C14.7614 17 17 14.7614 17 12H19C19 15.3137 16.3137 18 13 18V21.5C12.6569 21.5 12.3239 21.5 12 21.5C8.13401 21.5 5 18.366 5 14.5H7V12Z"></path>
+						</svg>
+						<span>Start Recording</span>
+					</button>
+					<div id="recordingStatus" class="status-message"></div>
+					<div id="audioPlayerContainer" class="audio-player-container">
+						<!-- Audio player will be inserted here -->
+					</div>
+				</div>
+
+				<div class="input-group">
+					<label for="imageUpload" class="file-upload-label">
+						<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px">
+							<path
+								d="M16 13H13V16H11V13H8V11H11V8H13V11H16V13ZM12 2C11.1716 2 10.3541 2.13883 9.58579 2.40401L8.70711 2.70711L7.29289 1.29289C6.90237 0.902369 6.2692 0.902369 5.87868 1.29289L3.29289 3.87868C2.90237 4.2692 2.90237 4.90237 3.29289 5.29289L4.70711 6.70711L2.40401 9.58579C2.13883 10.3541 2 11.1716 2 12C2 16.5116 5.23281 20.3584 9.53977 20.9048L9.5 21V22H11V21.7163C11.3294 21.7056 11.6601 21.6841 12 21.6519C12.3399 21.6841 12.6706 21.7056 13 21.7163V22H14.5V21H14.4602C18.7672 20.3584 22 16.5116 22 12C22 7.48842 18.7672 3.64161 14.4602 3.09525L15.2929 2.29289C15.6834 1.90237 15.6834 1.2692 15.2929 0.87868L12.7071 0.292893C12.7071 0.292893 12.7071 0.292893 12.7071 0.292893L12.4142 0C12.2784 2.22045e-07 12.1394 0 12 0C11.1716 0 10.3541 0.138833 9.58579 0.404012L8.70711 0.707107L7.29289 0.292893L5.87868 1.70711L3.29289 1.12132C2.90237 1.03189 2.53765 1.2317 2.37868 1.58579C2.21971 1.93987 2.29881 2.36195 2.58579 2.62132L4.70711 4.70711L2.40401 7.58579C2.13883 8.35415 2 9.17157 2 10C2 15.5228 6.47715 20 12 20C17.5228 20 22 15.5228 22 10C22 9.17157 21.8612 8.35415 21.596 7.58579L19.2929 4.70711L21.3787 2.62132C21.6657 2.36195 21.7803 1.93987 21.6213 1.58579C21.4623 1.2317 21.0976 1.03189 20.7071 1.12132L18.2929 1.70711L16.8787 0.292893C16.4882 -0.0976311 15.855 -0.0976311 15.4645 0.292893L12.8787 2.87868C12.7308 3.02657 12.7308 3.26629 12.8787 3.41421C13.0266 3.56214 13.2663 3.56214 13.4142 3.41421L15.2929 1.53553L16 2.29289V21H8V2.29289L8.70711 1.53553L10.5858 3.41421C10.7337 3.56214 10.9734 3.56214 11.1213 3.41421C11.2692 3.26629 11.2692 3.02657 11.1213 2.87868L8.53553 0.292893C8.14501 -0.0976311 7.51184 -0.0976311 7.12132 0.292893L4.53553 2.87868C4.38765 3.02657 4.38765 3.26629 4.53553 3.41421C4.68346 3.56214 4.92318 3.56214 5.07107 3.41421L6.87868 1.53553L7.58579 2.29289V16.7071L6.29289 18H5.5V16H4V18H3.29289L2.58579 17.2929L1.12132 15.8787C0.834341 15.6193 0.719712 15.1972 0.878682 14.8431C1.03765 14.489 1.40237 14.2892 1.79289 14.3787L4.20711 14.9645L5.62132 13.5502L2.70711 10.7071L2.29289 10.2929C1.90237 9.90237 1.90237 9.2692 2.29289 8.87868L4.87868 6.29289C5.2692 5.90237 5.90237 5.90237 6.29289 6.29289L7.70711 7.70711L10.2929 5.12132L10.7071 4.70711C11.0976 4.31658 11.7308 4.31658 12.1213 4.70711L14.7071 7.29289C15.0976 7.68342 15.0976 8.31658 14.7071 8.70711L13.2929 10.1213L16 12.7071V13Z"></path>
+						</svg>
+						<span>Upload Image</span>
+						<input type="file" id="imageUpload" accept="image/png, image/jpeg, image/webp" />
+					</label>
+					<div id="imageStatus" class="status-message"></div>
+					<div id="imagePreviewContainer" class="image-preview-container">
+						<!-- Image preview will be inserted here -->
+					</div>
+					<button id="clearImageButton" class="secondary-action clear-button" style="display: none">
+						<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16px" height="16px">
+							<path
+								d="M12 10.5858L15.5355 7.05025C15.9261 6.65973 16.5592 6.65973 16.9497 7.05025C17.3403 7.44078 17.3403 8.07394 16.9497 8.46447L13.4142 12L16.9497 15.5355C17.3403 15.9261 17.3403 16.5592 16.9497 16.9497C16.5592 17.3403 15.9261 17.3403 15.5355 16.9497L12 13.4142L8.46447 16.9497C8.07394 17.3403 7.44078 17.3403 7.05025 16.9497C6.65973 16.5592 6.65973 15.9261 7.05025 15.5355L10.5858 12L7.05025 8.46447C6.65973 8.07394 6.65973 7.44078 7.05025 7.05025C7.44078 6.65973 8.07394 6.65973 8.46447 7.05025L12 10.5858Z"></path>
+						</svg>
+						Clear Image
+					</button>
+				</div>
+			</section>
+
+			<section class="action-zone">
+				<button id="processForms" class="primary-action">
+					<span class="button-text">Process with AI</span>
+					<div class="spinner" style="display: none"></div>
+				</button>
+			</section>
+
+			<section id="results" class="results-zone">
+				<div class="results-loader-overlay" style="display: none">
+					<div class="results-spinner"></div>
+					<p>AI is thinking...</p>
+				</div>
+				<div class="results-content">
+					<h2>Gemini AI Output:</h2>
+					<pre id="geminiOutput"></pre>
+					<h2>All Forms Found (for context):</h2>
+					<div id="formsFound"></div>
+				</div>
+			</section>
+		</div>
+		<script src="popup.js"></script>
+	</body>
+</html>
