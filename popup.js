@@ -15,6 +15,88 @@ let isFormSelectionModePopupActive = false;
 let currentPendingAIDataForFill = null;
 let lastFillSuccessful = false;
 
+// NEW: Language and Translation variables
+let uiLanguage = "en";
+let aiOutputLanguage = "en";
+const translations = {
+	en: {
+		appTitle: "AI Form Filler",
+		toggleThemeTitle: "Toggle Theme",
+		apiKeyLabel: "Gemini API Key:",
+		apiKeyPlaceholder: "Enter your API Key",
+		saveButton: "Save",
+		targetFormLabel: "Target Form:",
+		selectFormButton: "Select Form on Page",
+		selectFormButtonCancel: "Cancel Selection",
+		formStatusNone: "No form selected.",
+		formStatusSelecting: "Click element on page...",
+		formStatusSelected: "Selected: {formId}",
+		userRequestLabel: "Your Request (Optional if form selected & using image/audio):",
+		userRequestPlaceholder: "e.g., 'Fill login with user test pass 123' OR use voice, OR describe image.",
+		recordButtonStart: "Start Recording",
+		recordButtonStop: "Stop Recording",
+		uploadImageButton: "Upload Image",
+		imagePlaceholder: "Drop image or click",
+		clearImageButton: "Clear Image",
+		processAIButton: "Process with AI",
+		processAIButtonLoading: "Processing...",
+		undoButton: "Undo Last Fill",
+		confirmFillTitle: "Confirm AI Suggestions",
+		confirmFillMessage: "AI suggests filling {count} field(s) on form '{formId}'. Check highlights on the page.",
+		confirmFillButton: "Fill Fields",
+		cancelPreviewButton: "Cancel Preview",
+		resultsAIOutputHeader: "Gemini AI Output",
+		resultsFormsFoundHeader: "All Forms Found (for context)",
+		noFormsFound: "No forms found on this page.",
+		formHeader: "Form {index} (ID: {id})",
+		userSelectedSuffix: "(USER SELECTED)",
+		noFieldsInForm: "No fields detected in this form.",
+		settingsHeader: "Settings",
+		uiLanguageLabel: "UI Language",
+		aiLanguageLabel: "AI Output Language",
+		aiLangEnglish: "English (for text fields)",
+		aiLangArabic: "Arabic (for text fields)",
+	},
+	ar: {
+		appTitle: "ملء النماذج بالذكاء الاصطناعي",
+		toggleThemeTitle: "تغيير السمة",
+		apiKeyLabel: "مفتاح Gemini API:",
+		apiKeyPlaceholder: "أدخل مفتاح الـ API الخاص بك",
+		saveButton: "حفظ",
+		targetFormLabel: "النموذج المستهدف:",
+		selectFormButton: "حدد النموذج في الصفحة",
+		selectFormButtonCancel: "إلغاء التحديد",
+		formStatusNone: "لم يتم تحديد نموذج.",
+		formStatusSelecting: "اضغط على عنصر في الصفحة...",
+		formStatusSelected: "تم تحديد: {formId}",
+		userRequestLabel: "طلبك (اختياري في حال تحديد نموذج واستخدام صورة/صوت):",
+		userRequestPlaceholder: 'مثال: "املا بيانات الدخول بـ test و 123" أو استخدم الصوت، أو اوصف الصورة.',
+		recordButtonStart: "ابدأ التسجيل",
+		recordButtonStop: "إيقاف التسجيل",
+		uploadImageButton: "رفع صورة",
+		imagePlaceholder: "اسحب صورة هنا أو اضغط",
+		clearImageButton: "مسح الصورة",
+		processAIButton: "معالجة بالذكاء الاصطناعي",
+		processAIButtonLoading: "جاري المعالجة...",
+		undoButton: "تراجع عن آخر ملء",
+		confirmFillTitle: "تأكيد اقتراحات الذكاء الاصطناعي",
+		confirmFillMessage: "الذكاء الاصطناعي يقترح ملء {count} حقل في نموذج '{formId}'. تفقد التحديدات في الصفحة.",
+		confirmFillButton: "ملء الحقول",
+		cancelPreviewButton: "إلغاء المعاينة",
+		resultsAIOutputHeader: "مخرجات Gemini AI",
+		resultsFormsFoundHeader: "كل النماذج الموجودة (للمرجع)",
+		noFormsFound: "لا توجد نماذج في هذه الصفحة.",
+		formHeader: "نموذج {index} (المعرف: {id})",
+		userSelectedSuffix: "(تم تحديده)",
+		noFieldsInForm: "لا توجد حقول في هذا النموذج.",
+		settingsHeader: "الإعدادات",
+		uiLanguageLabel: "لغة الواجهة",
+		aiLanguageLabel: "لغة المخرجات (AI)",
+		aiLangEnglish: "الإنجليزية (للحقول النصية)",
+		aiLangArabic: "العربية (للحقول النصية)",
+	},
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 	// --- DOM Elements ---
 	const themeToggler = document.getElementById("themeToggler");
@@ -25,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	const apiKeyInput = document.getElementById("apiKeyInput");
 	const saveApiKeyButton = document.getElementById("saveApiKeyButton");
 	const apiKeyStatus = document.getElementById("apiKeyStatus");
-	// const apiKeySection = document.getElementById("apiKeySection"); // To show/hide
 
 	const recordButton = document.getElementById("recordButton"),
 		recordButtonText = recordButton.querySelector("span");
@@ -35,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		processFormsButtonText = processFormsButton.querySelector(".button-text"),
 		processFormsButtonSpinner = processFormsButton.querySelector(".spinner");
 	const geminiOutputDiv = document.getElementById("geminiOutput");
-	const formsFoundDiv = document.getElementById("formsFound"); // This is the content div
+	const formsFoundDiv = document.getElementById("formsFound");
 	const imageUploadInput = document.getElementById("imageUpload"),
 		imageStatusDiv = document.getElementById("imageStatus"),
 		imagePreviewContainer = document.getElementById("imagePreviewContainer"),
@@ -57,16 +138,21 @@ document.addEventListener("DOMContentLoaded", () => {
 	const toggleGeminiOutputButton = document.getElementById("toggleGeminiOutput");
 	const geminiOutputContainer = document.getElementById("geminiOutputContainer");
 	const toggleFormsFoundButton = document.getElementById("toggleFormsFound");
-	// formsFoundDiv is already defined as the content area for forms
+
+	// NEW: Language setting elements
+	const toggleSettingsButton = document.getElementById("toggleSettings");
+	const settingsContent = document.getElementById("settingsContent");
+	const uiLanguageSelect = document.getElementById("uiLanguageSelect");
+	const aiLanguageSelect = document.getElementById("aiLanguageSelect");
 
 	// --- Initial UI Setup ---
 	clearImagePreviewDOM();
 	clearAudioPlayer();
-	updateSelectedFormDisplay();
 	undoFillButton.disabled = true;
 	undoFillButton.style.display = "none";
 	setupCollapsibleSections();
 	loadAndSetTheme(); // Load and set theme first
+	loadPreferences(); // NEW: Load language prefs
 	loadApiKey(); // Load API key if using popup method
 
 	// --- Event Listeners ---
@@ -81,6 +167,64 @@ document.addEventListener("DOMContentLoaded", () => {
 	confirmFillButton.addEventListener("click", executeConfirmedFill);
 	cancelPreviewButton.addEventListener("click", cancelAIFillPreview);
 	undoFillButton.addEventListener("click", handleUndoFill);
+	// NEW: Language event listeners
+	uiLanguageSelect.addEventListener("change", handleUiLanguageChange);
+	aiLanguageSelect.addEventListener("change", handleAiLanguageChange);
+
+	// --- NEW: Language and Preferences ---
+	function applyLocalization(lang) {
+		uiLanguage = lang;
+		document.body.classList.toggle("rtl", lang === "ar");
+		document.documentElement.lang = lang;
+		document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+
+		const t = translations[lang] || translations.en;
+
+		document.querySelectorAll("[data-i18n-key]").forEach((el) => {
+			const key = el.getAttribute("data-i18n-key");
+			if (t[key]) {
+				// Target span inside buttons if it exists, otherwise the element itself
+				const target = el.querySelector("span") || el;
+				target.textContent = t[key];
+			}
+		});
+
+		document.querySelectorAll("[data-i18n-key-placeholder]").forEach((el) => {
+			const key = el.getAttribute("data-i18n-key-placeholder");
+			if (t[key]) el.placeholder = t[key];
+		});
+
+		document.querySelectorAll("[data-i18n-key-title]").forEach((el) => {
+			const key = el.getAttribute("data-i18n-key-title");
+			if (t[key]) el.title = t[key];
+		});
+
+		// Manually update dynamic text elements
+		updateSelectedFormDisplay();
+	}
+
+	function loadPreferences() {
+		chrome.storage.local.get(["uiLanguage", "aiOutputLanguage"], (prefs) => {
+			uiLanguage = prefs.uiLanguage || "en";
+			aiOutputLanguage = prefs.aiOutputLanguage || "en";
+
+			uiLanguageSelect.value = uiLanguage;
+			aiLanguageSelect.value = aiOutputLanguage;
+
+			applyLocalization(uiLanguage);
+		});
+	}
+
+	function handleUiLanguageChange(e) {
+		const newLang = e.target.value;
+		applyLocalization(newLang);
+		chrome.storage.local.set({ uiLanguage: newLang });
+	}
+
+	function handleAiLanguageChange(e) {
+		aiOutputLanguage = e.target.value;
+		chrome.storage.local.set({ aiOutputLanguage: aiOutputLanguage });
+	}
 
 	// --- Theme Handling ---
 	function setTheme(theme) {
@@ -127,23 +271,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		chrome.storage.local.get("geminiApiKey", (result) => {
 			if (result.geminiApiKey) {
 				apiKeyInput.value = result.geminiApiKey;
-				// showStatusMessage(apiKeyStatus, "API Key loaded.", "info");
-				// setTimeout(() => clearStatusMessage(apiKeyStatus), 2000);
-				// apiKeySection.style.display = "none"; // Hide if key exists
 			} else {
 				showStatusMessage(apiKeyStatus, "API Key not set. Please save.", "warning", 0);
-				// apiKeySection.style.display = "block"; // Show if key doesn't exist
 			}
 		});
 	}
-	// To show API key section if needed, call this:
-	// if (apiKeySection) apiKeySection.style.display = 'block';
 
 	// --- Collapsible Sections ---
 	function setupCollapsibleSections() {
 		const collapsibles = [
 			{ button: toggleGeminiOutputButton, content: geminiOutputContainer, openByDefault: false },
 			{ button: toggleFormsFoundButton, content: formsFoundDiv, openByDefault: false },
+			{ button: toggleSettingsButton, content: settingsContent, openByDefault: false }, // NEW
 		];
 
 		collapsibles.forEach((coll) => {
@@ -156,17 +295,9 @@ document.addEventListener("DOMContentLoaded", () => {
 						icon.textContent = isOpen ? "-" : "+";
 						icon.classList.toggle("open", isOpen);
 					}
-					// Optional: Store preference
-					// chrome.storage.local.set({ [`collapsible-${coll.content.id}`]: isOpen });
 				};
 
-				// Load preference or set default
-				// chrome.storage.local.get([`collapsible-${coll.content.id}`], (result) => {
-				//    const storedState = result[`collapsible-${coll.content.id}`];
-				//    setSectionState(typeof storedState === 'boolean' ? storedState : coll.openByDefault);
-				// });
-
-				setSectionState(coll.openByDefault); // Set initial state
+				setSectionState(coll.openByDefault);
 
 				coll.button.addEventListener("click", () => {
 					const isHidden = coll.content.style.display === "none";
@@ -186,7 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		if (duration > 0) {
 			setTimeout(() => {
-				// Check if the message is still the same to avoid clearing a new message
 				if (element.textContent === message && element.classList.contains(type)) {
 					clearStatusMessage(element);
 				}
@@ -205,7 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		fillOperationStatusContainer.innerHTML = ""; // Clear previous
 		const p = document.createElement("p");
 		p.textContent = message;
-		p.className = type; // Class should match one of success, error, warning, info
+		p.className = type;
 		fillOperationStatusContainer.appendChild(p);
 		fillOperationStatusContainer.style.display = "block";
 
@@ -223,14 +353,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// --- Form Selection Logic ---
 	function updateSelectedFormDisplay() {
+		const t = translations[uiLanguage] || translations.en;
 		if (isFormSelectionModePopupActive) {
-			selectedFormDisplay.textContent = "Click element on page...";
+			selectedFormDisplay.textContent = t.formStatusSelecting;
 			selectedFormDisplay.className = "status-like-display selecting";
 		} else if (manuallySelectedFormId) {
-			selectedFormDisplay.textContent = `Selected: ${manuallySelectedFormId}`;
+			selectedFormDisplay.textContent = t.formStatusSelected.replace("{formId}", manuallySelectedFormId);
 			selectedFormDisplay.className = "status-like-display selected";
 		} else {
-			selectedFormDisplay.textContent = "No form selected.";
+			selectedFormDisplay.textContent = t.formStatusNone;
 			selectedFormDisplay.className = "status-like-display";
 		}
 	}
@@ -298,14 +429,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 	function enterFormSelectionModeUI() {
 		isFormSelectionModePopupActive = true;
-		document.body.classList.add("selecting-form"); // For popup-specific styling during selection
-		selectFormButtonText.textContent = "Cancel Selection";
+		document.body.classList.add("selecting-form");
+		const t = translations[uiLanguage] || translations.en;
+		selectFormButtonText.textContent = t.selectFormButtonCancel;
 		updateSelectedFormDisplay();
 	}
 	function exitFormSelectionModeUI(reason = "") {
 		isFormSelectionModePopupActive = false;
 		document.body.classList.remove("selecting-form");
-		selectFormButtonText.textContent = "Select Form on Page";
+		const t = translations[uiLanguage] || translations.en;
+		selectFormButtonText.textContent = t.selectFormButton;
 		if (reason && !manuallySelectedFormId) selectedFormDisplay.textContent = reason;
 		updateSelectedFormDisplay();
 	}
@@ -467,6 +600,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// --- Audio Handling ---
 	async function toggleRecording() {
+		const t = translations[uiLanguage] || translations.en;
 		if (!isRecording) {
 			try {
 				currentAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -481,7 +615,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				mediaRecorder = new MediaRecorder(currentAudioStream, options);
 				actualMimeTypeFromRecorder = mediaRecorder.mimeType || "";
 				mediaRecorder.onstart = () => {
-					recordButtonText.textContent = "Stop Recording";
+					recordButtonText.textContent = t.recordButtonStop;
 					recordButton.classList.add("is-recording");
 					showStatusMessage(recordingStatusDiv, "Recording...", "recording");
 					isRecording = true;
@@ -494,7 +628,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					if (event.data.size > 0) audioChunks.push(event.data);
 				};
 				mediaRecorder.onstop = () => {
-					recordButtonText.textContent = "Start Recording";
+					recordButtonText.textContent = t.recordButtonStart;
 					recordButton.classList.remove("is-recording");
 					isRecording = false;
 					if (currentAudioStream) currentAudioStream.getTracks().forEach((track) => track.stop());
@@ -554,7 +688,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (currentAudioStream) currentAudioStream.getTracks().forEach((track) => track.stop());
 				currentAudioStream = null;
 				console.error("POPUP Mic Error:", err);
-				recordButtonText.textContent = "Start Recording";
+				recordButtonText.textContent = t.recordButtonStart;
 				recordButton.classList.remove("is-recording");
 				isRecording = false;
 			}
@@ -562,7 +696,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (mediaRecorder && mediaRecorder.state === "recording") {
 				mediaRecorder.stop();
 			} else {
-				recordButtonText.textContent = "Start Recording";
+				recordButtonText.textContent = t.recordButtonStart;
 				recordButton.classList.remove("is-recording");
 				isRecording = false;
 				if (currentAudioStream) currentAudioStream.getTracks().forEach((track) => track.stop());
@@ -596,9 +730,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		imageUploadInput.disabled = isProcessing;
 		userRequestTextarea.disabled = isProcessing;
 		if (clearImageButton) clearImageButton.disabled = isProcessing;
+		// NEW: Disable language selectors during processing
+		uiLanguageSelect.disabled = isProcessing;
+		aiLanguageSelect.disabled = isProcessing;
 
+		const t = translations[uiLanguage] || translations.en;
 		processFormsButton.classList.toggle("is-loading", isProcessing);
-		processFormsButtonText.textContent = isProcessing ? "Processing..." : "Process with AI";
+		processFormsButtonText.textContent = isProcessing ? t.processAIButtonLoading : t.processAIButton;
 		if (processFormsButtonSpinner) processFormsButtonSpinner.style.display = isProcessing ? "inline-block" : "none";
 
 		if (isProcessing) {
@@ -616,7 +754,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function handleProcessForms() {
 		const userRequest = userRequestTextarea.value.trim();
-		formsFoundDiv.innerHTML = ""; // Clear previous forms list
+		formsFoundDiv.innerHTML = "";
 		geminiOutputDiv.textContent = "";
 		geminiOutputDiv.className = "";
 		fillOperationStatusContainer.innerHTML = "";
@@ -628,7 +766,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		undoFillButton.style.display = "none";
 
 		let processingMessageParts = [];
-		if (manuallySelectedFormId) processingMessageParts.push(`selected form`); // (${manuallySelectedFormId})
+		if (manuallySelectedFormId) processingMessageParts.push(`selected form`);
 		if (recordedImageDataUrlBase64) processingMessageParts.push("image");
 		if (recordedAudioBase64) processingMessageParts.push("audio");
 		if (userRequest !== "") processingMessageParts.push("text");
@@ -645,7 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		setProcessingState(true, "Preparing...");
 		geminiOutputDiv.textContent = `Starting process with ${processingMessageParts.join(", ")}...`;
 		geminiOutputDiv.className = "info-message";
-		if (geminiOutputContainer.style.display === "none") toggleGeminiOutputButton.click(); // Open if closed
+		if (geminiOutputContainer.style.display === "none") toggleGeminiOutputButton.click();
 
 		getActiveTabId((tabId) => {
 			if (!tabId) {
@@ -667,9 +805,9 @@ document.addEventListener("DOMContentLoaded", () => {
 						return;
 					}
 					const formsData = formsDataResponse || [];
-					displayFormsFound(formsData); // Display forms found
+					displayFormsFound(formsData);
 					if (formsData.length > 0 && formsFoundDiv.style.display === "none") {
-						if (toggleFormsFoundButton) toggleFormsFoundButton.click(); // Open forms list if closed and has forms
+						if (toggleFormsFoundButton) toggleFormsFoundButton.click();
 					}
 
 					const messageToBackground = {
@@ -681,6 +819,7 @@ document.addEventListener("DOMContentLoaded", () => {
 						audioMimeType: recordedAudioMimeType,
 						imageData: recordedImageDataUrlBase64,
 						imageMimeType: recordedImageMimeType,
+						aiOutputLanguage: aiOutputLanguage, // NEW: Pass language preference
 					};
 					setProcessingState(true, "Sending to AI...");
 					geminiOutputDiv.textContent = "Data sent to AI. Waiting for response...";
@@ -706,8 +845,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		} else if (response && response.geminiResult) {
 			try {
 				const aiResultObject = JSON.parse(response.geminiResult);
-				geminiOutputDiv.textContent = JSON.stringify(aiResultObject, null, 2); // Keep pre for JSON
-				geminiOutputDiv.className = ""; // Default class for pre
+				geminiOutputDiv.textContent = JSON.stringify(aiResultObject, null, 2);
+				geminiOutputDiv.className = "";
 				if (aiResultObject && aiResultObject.formId && Array.isArray(aiResultObject.fieldsToFill)) {
 					if (aiResultObject.fieldsToFill.length > 0) {
 						currentPendingAIDataForFill = { tabId, data: aiResultObject };
@@ -721,18 +860,18 @@ document.addEventListener("DOMContentLoaded", () => {
 								);
 								currentPendingAIDataForFill = null;
 							} else {
-								fillConfirmationMessage.textContent = `AI suggests filling ${previewResponse.fieldsPreviewed} field(s) on form '${aiResultObject.formId}'. Check highlights on the page.`;
+								const t = translations[uiLanguage] || translations.en;
+								fillConfirmationMessage.textContent = t.confirmFillMessage
+									.replace("{count}", previewResponse.fieldsPreviewed)
+									.replace("{formId}", aiResultObject.formId);
 								fillConfirmationSection.style.display = "flex";
-								// geminiOutputDiv.textContent += "\n\n(Awaiting your confirmation to fill fields)";
 							}
 						});
 					} else {
-						// geminiOutputDiv.textContent += "\n\n(AI suggested no fields to fill)";
 						showGeneralPopupMessage(`AI analyzed form '${aiResultObject.formId}' but suggested no fields to fill.`, "info");
 						setProcessingState(false);
 					}
 				} else {
-					// geminiOutputDiv.textContent += "\n\n(AI response structure not as expected for filling)";
 					showGeneralPopupMessage("AI response structure not as expected for filling.", "warning");
 					setProcessingState(false);
 				}
@@ -788,7 +927,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			chrome.tabs.sendMessage(tabId, { action: "clearFieldPreviews" }, () => {
 				if (chrome.runtime.lastError) console.warn("Error clearing previews:", chrome.runtime.lastError.message);
 			});
-			// geminiOutputDiv.textContent += "\n\n(Fill operation cancelled by user.)";
 			currentPendingAIDataForFill = null;
 		}
 		showGeneralPopupMessage("Fill preview cancelled.", "info", 3000);
@@ -823,21 +961,22 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function displayFormsFound(formsDataArray) {
-		formsFoundDiv.innerHTML = ""; // Clear previous
+		const t = translations[uiLanguage] || translations.en;
+		formsFoundDiv.innerHTML = "";
 		if (!formsDataArray || formsDataArray.length === 0) {
-			formsFoundDiv.innerHTML = '<p class="no-forms">No forms found on this page.</p>';
+			formsFoundDiv.innerHTML = `<p class="no-forms">${t.noFormsFound}</p>`;
 			return;
 		}
 		formsDataArray.forEach((form, formIndex) => {
 			const formSection = document.createElement("div");
 			formSection.className = "form-section";
-			let titleText = `Form ${formIndex + 1} (ID: ${form.uniqueId})`;
+			let titleText = t.formHeader.replace("{index}", formIndex + 1).replace("{id}", form.uniqueId);
 			if (form.uniqueId === manuallySelectedFormId) {
-				titleText += ` <strong style="font-weight:bold;">(USER SELECTED)</strong>`; // Simpler highlight
+				titleText += ` <strong style="font-weight:bold;">${t.userSelectedSuffix}</strong>`;
 				formSection.classList.add("user-selected-form-details");
 			}
 			const h2 = document.createElement("h2");
-			h2.innerHTML = titleText; // Use innerHTML for the strong tag
+			h2.innerHTML = titleText;
 			formSection.appendChild(h2);
 
 			if (form.fields.length > 0) {
@@ -850,7 +989,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				formSection.appendChild(ul);
 			} else {
 				const p = document.createElement("p");
-				p.textContent = "No fields detected in this form.";
+				p.textContent = t.noFieldsInForm;
 				formSection.appendChild(p);
 			}
 			formsFoundDiv.appendChild(formSection);
@@ -861,12 +1000,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.error("POPUP: handleErrorInUI. Forms Msg:", formsMsg, "Gemini Msg:", geminiMsg);
 		if (formsFoundDiv) {
 			formsFoundDiv.innerHTML = `<p class="error-message">${formsMsg}</p>`;
-			if (formsFoundDiv.style.display === "none" && toggleFormsFoundButton) toggleFormsFoundButton.click(); // Open if error
+			if (formsFoundDiv.style.display === "none" && toggleFormsFoundButton) toggleFormsFoundButton.click();
 		}
 		if (geminiOutputDiv) {
 			geminiOutputDiv.textContent = geminiMsg;
 			geminiOutputDiv.className = "error-message";
-			if (geminiOutputContainer.style.display === "none" && toggleGeminiOutputButton) toggleGeminiOutputButton.click(); // Open if error
+			if (geminiOutputContainer.style.display === "none" && toggleGeminiOutputButton) toggleGeminiOutputButton.click();
 		}
 		setProcessingState(false);
 	}

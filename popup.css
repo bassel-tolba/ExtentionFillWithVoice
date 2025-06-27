@@ -226,7 +226,9 @@ header h1 {
 textarea,
 input[type="text"],
 input[type="password"],
-input[type="file"] {
+input[type="file"],
+select {
+	/* NEW: Added select */
 	width: 100%;
 	padding: 10px;
 	border: 1px solid var(--input-border);
@@ -243,7 +245,9 @@ textarea#userRequest {
 }
 textarea:focus,
 input[type="text"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+select:focus {
+	/* NEW: Added select */
 	outline: none;
 	border-color: var(--accent-primary);
 	box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-primary) 30%, transparent);
@@ -780,15 +784,40 @@ body.selecting-form #selectFormButton:hover:not(:disabled) {
 	transform: rotate(45deg);
 }
 .collapsible-content {
-	padding: 0px 15px 15px 15px;
+	padding: 15px; /* Adjusted padding */
 }
 #formsFound.collapsible-content,
 #geminiOutputContainer.collapsible-content {
 	max-height: 250px;
 	overflow-y: auto;
 }
-#geminiOutputContainer.collapsible-content {
-	padding: 15px;
+
+/* --- NEW: RTL (Arabic) Styles --- */
+body.rtl {
+	direction: rtl;
+}
+body.rtl .theme-toggle-button {
+	margin-left: 0;
+	margin-right: auto;
+}
+body.rtl .primary-action .spinner {
+	right: auto;
+	left: 15px;
+}
+body.rtl .primary-action.is-loading .button-text {
+	margin-right: 0;
+	margin-left: 25px;
+}
+body.rtl .status-message.recording .pulsing-dot {
+	margin-right: 0;
+	margin-left: 6px;
+}
+body.rtl .collapsible-header {
+	text-align: right;
+}
+body.rtl .form-section.user-selected-form-details {
+	border-left: none;
+	border-right: 3px solid var(--success-border);
 }
 
 /* --- Responsive Adjustments --- */

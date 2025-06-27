@@ -52,6 +52,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			hasImageData: !!request.imageData,
 			imageMimeType: request.imageMimeType,
 			selectedFormId: request.selectedFormId,
+			aiOutputLanguage: request.aiOutputLanguage, // NEW: Log the requested language
 		});
 
 		if (GEMINI_API_KEY === "YOUR_GEMINI_API_KEY" || !GEMINI_API_KEY) {
@@ -61,7 +62,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			return true;
 		}
 
-		const { formsData, userRequest, audioData, audioMimeType, imageData, imageMimeType, selectedFormId } = request;
+		// NEW: Destructure aiOutputLanguage from the request
+		const { formsData, userRequest, audioData, audioMimeType, imageData, imageMimeType, selectedFormId, aiOutputLanguage } = request;
 
 		const hasImage = !!(imageData && imageMimeType);
 		const hasAudio = !!(audioData && audioMimeType);
@@ -78,6 +80,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 		let basePromptText;
 		let apiParts = [];
 		const formsJsonString = JSON.stringify(formsData || [], null, 2);
+
+		// NEW: Dynamically create an instruction for the AI's output language
+		let aiLanguageInstruction = "";
+		if (aiOutputLanguage === "ar") {
+			aiLanguageInstruction = `
+IMPORTANT: The 'fieldValue' in your JSON response for any text-based input fields (like text, textarea, email, password) MUST be in Arabic. Do not translate the 'fieldName', only the values to be filled.
+`;
+		}
 
 		const commonOutputInstructions = `
 Example Output Format:
@@ -151,14 +161,17 @@ The image to analyze is provided next.
 			if (hasAudio) {
 				apiParts.push({ text: "The user's spoken instructions regarding the image and forms are in the following audio. Listen carefully:" });
 				apiParts.push({ inlineData: { mimeType: audioMimeType, data: audioData } });
-				apiParts.push({ text: commonOutputInstructions });
+				// NEW: Added language instruction
+				apiParts.push({ text: `${aiLanguageInstruction}${commonOutputInstructions}` });
 			} else if (hasText) {
+				// NEW: Added language instruction
 				apiParts.push({
-					text: `The user's typed instructions regarding the image and forms are: "${userRequest}"\n${commonOutputInstructions}`,
+					text: `The user's typed instructions regarding the image and forms are: "${userRequest}"\n${aiLanguageInstruction}${commonOutputInstructions}`,
 				});
 			} else {
+				// NEW: Added language instruction
 				apiParts.push({
-					text: `Please analyze the image and fill the target form based on its content.\n${commonOutputInstructions}`,
+					text: `Please analyze the image and fill the target form based on its content.\n${aiLanguageInstruction}${commonOutputInstructions}`,
 				});
 			}
 		} else if (hasAudio) {
@@ -179,8 +192,8 @@ ${formsJsonString}
 \`\`\`
 
 The user's spoken request is in the audio provided next. Interpret it carefully.
-${commonOutputInstructions}
-`;
+${aiLanguageInstruction}${commonOutputInstructions} 
+`; // NEW: Injected language instruction
 			apiParts.push({ text: basePromptText });
 			apiParts.push({ inlineData: { mimeType: audioMimeType, data: audioData } });
 		} else if (hasText) {
@@ -201,8 +214,8 @@ ${formsJsonString}
 
 Here is my request:
 "${userRequest}"
-${commonOutputInstructions}
-`;
+${aiLanguageInstruction}${commonOutputInstructions}
+`; // NEW: Injected language instruction
 			apiParts.push({ text: basePromptText });
 		} else {
 			const errorMsg = "No user request (text, audio, or image) provided to background script.";
